@@ -1,0 +1,109 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI-Augmented Semantic Search</h1>
+            <p class="subtitle">Powered by vector embeddings and LLM understanding</p>
+        </header>
+
+        <main>
+            <section class="search-section">
+                <form action="/search" method="get" class="search-form">
+                    <div class="search-input-container">
+                        <input
+                            type="text"
+                            name="q"
+                            placeholder="Enter your search query..."
+                            class="search-input"
+                            required
+                        >
+                        <button type="submit" class="search-button">Search</button>
+                    </div>
+                    <div class="search-options">
+                        <label for="top_k">Results to show:</label>
+                        <select name="top_k" id="top_k">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </form>
+
+                {% if error %}
+                <div class="error-message">
+                    {{ error }}
+                </div>
+                {% endif %}
+            </section>
+
+            <section class="stats-section">
+                <h2>System Statistics</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Indexed Documents</h3>
+                        <p class="stat-value">{{ stats.document_count }}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Collection</h3>
+                        <p class="stat-value">{{ stats.collection_name }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="crawl-section">
+                <h2>Add Content to Search Index</h2>
+                <form id="crawl-form" class="crawl-form">
+                    <div class="form-group">
+                        <label for="crawl-url">Website URL:</label>
+                        <input
+                            type="url"
+                            id="crawl-url"
+                            placeholder="https://example.com"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="max-pages">Max Pages:</label>
+                        <input
+                            type="number"
+                            id="max-pages"
+                            value="10"
+                            min="1"
+                            max="50"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="max-depth">Max Depth:</label>
+                        <input
+                            type="number"
+                            id="max-depth"
+                            value="2"
+                            min="1"
+                            max="5"
+                        >
+                    </div>
+                    <button type="submit" class="crawl-button">Crawl & Index</button>
+                </form>
+                <div id="crawl-status" class="crawl-status"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>AI-Augmented Semantic Search Engine &copy; 2023</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', path='/js/main.js') }}">
+        <!-- templates/index.html (continued) -->
+    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!-- templates/results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - {{ query }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI-Augmented Semantic Search</h1>
+            <form action="/search" method="get" class="search-form header-search">
+                <div class="search-input-container">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ query }}"
+                        class="search-input"
+                        required
+                    >
+                    <button type="submit" class="search-button">Search</button>
+                </div>
+            </form>
+        </header>
+
+        <main>
+            <section class="results-meta">
+                <div class="results-summary">
+                    <p>Found {{ response.total_results }} results for <strong>"{{ query }}"</strong> ({{ execution_time }})</p>
+                </div>
+
+                <div class="semantic-understanding">
+                    <h3>Semantic Understanding</h3>
+                    <p>{{ response.semantic_understanding }}</p>
+                </div>
+            </section>
+
+            <section class="results-section">
+                {% if response.results %}
+                    {% for result in response.results %}
+                    <div class="result-card">
+                        <h2 class="result-title">
+                            <a href="{{ result.url }}" target="_blank">{{ result.title }}</a>
+                        </h2>
+                        <p class="result-url">{{ result.url }}</p>
+                        <p class="result-snippet">{{ result.snippet | safe }}</p>
+                        <div class="result-meta">
+                            <span class="relevance-score">Relevance: {{ "%.2f"|format(result.relevance_score) }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-results">
+                        <p>No results found for your query. Try different keywords or add more content to the index.</p>
+                    </div>
+                {% endif %}
+            </section>
+        </main>
+
+        <footer>
+            <p>AI-Augmented Semantic Search Engine &copy; 2023</p>
+        </footer>
+    </div>
+</body>
+</html>
