@@ -1,4 +1,8 @@
 # streamlit_app.py
+import os
+
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
+
 import streamlit as st
 from langchain_groq import ChatGroq
 from langchain_community.utilities import ArxivAPIWrapper, WikipediaAPIWrapper
@@ -34,7 +38,8 @@ if search_mode in ["Combined Search", "Vector Search Only"]:
     st.sidebar.subheader("Vector Search Settings")
     vector_search_url = st.sidebar.text_input(
         "Vector Search API URL:",
-        value="http://localhost:8000/api/search"
+        value=f"{API_BASE_URL}/api/search"
+
     )
     top_k_vector = st.sidebar.slider("Number of vector results:", min_value=1, max_value=20, value=5)
 
@@ -51,7 +56,7 @@ if st.sidebar.checkbox("Show Crawler Settings"):
                 with st.sidebar:
                     with st.spinner("Crawling website..."):
                         response = httpx.post(
-                            "http://localhost:8000/api/crawl",
+                            f"{API_BASE_URL}/api/crawl",
                             json={"url": crawl_url, "max_pages": max_pages, "max_depth": max_depth},
                             timeout=300.0  # Longer timeout for crawling
                         )
@@ -222,3 +227,11 @@ if prompt := st.chat_input(placeholder="Ask me anything..."):
 else:
     if not api_key and search_mode in ["Web Search Only", "Combined Search"]:
         st.warning("Please enter your Groq API key in the sidebar for web search capabilities.")
+
+if __name__ == "__main__":
+    import streamlit.web.cli as stcli
+    import sys
+
+    port = int(os.getenv("PORT", 8501))
+    sys.argv = ["streamlit", "run", __file__, "--server.port", str(port), "--server.address", "0.0.0.0"]
+    sys.exit(stcli.main())
