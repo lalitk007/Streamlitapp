@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: semantic-search-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: EMBEDDING_MODEL
+        value: all-MiniLM-L6-v2
+      - key: CHROMA_PERSIST_DIRECTORY
+        value: ./chroma_db
+      - key: MAX_WEBSITES_TO_CRAWL
+        value: 10
+      - key: MAX_DEPTH
+        value: 2
+      - key: PYTHONUNBUFFERED
+        value: "true"
+
+  - type: web
+    name: semantic-search-ui
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python streamlit_app.py
+    plan: free
+    envVars:
+      - key: API_BASE_URL
+        fromService:
+          name: semantic-search-api
+          type: web
+          property: url
+      - key: GROQ_API_KEY
+        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "true"
