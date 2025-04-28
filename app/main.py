@@ -17,20 +17,19 @@ from app.utils.helpers import format_time, highlight_terms, truncate_text
 
 from fastapi.middleware.cors import CORSMiddleware
 
+# Initialize FastAPI app
+app = FastAPI(
+    title="AI-Augmented Semantic Search Engine",
+    description="A search engine that uses semantic text analysis to provide more relevant results",
+    version="1.0.0"
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-
-# Initialize FastAPI app
-app = FastAPI(
-    title="AI-Augmented Semantic Search Engine",
-    description="A search engine that uses semantic text analysis to provide more relevant results",
-    version="1.0.0"
 )
 
 # Mount static files
